@@ -1,0 +1,8 @@
+flask
+pymysql
+werkzeug
+pandas
+numpy
+scikit-learn
+matplotlib
+gunicorn

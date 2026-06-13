@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Expense Tracker{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+{% if session.user_id %}
+<!-- BUDGET ALERT BAR -->
+{% if alert_level == 'red' %}
+<div class="alert-bar red">
+  ⚠️ Warning! You have used <strong>{{ alert_pct }}%</strong> of your budget
+  (₹{{ "%.0f"|format(spent) }} of ₹{{ "%.0f"|format(budget) }}).
+  Only ₹{{ "%.0f"|format(budget - spent) }} left.
+</div>
+{% elif alert_level == 'yellow' %}
+<div class="alert-bar yellow">
+  🟡 Getting close! You have used <strong>{{ alert_pct }}%</strong> of your budget.
+  ₹{{ "%.0f"|format(budget - spent) }} remaining.
+</div>
+{% else %}
+<div class="alert-bar green">
+  ✅ Budget on track — {{ alert_pct }}% used. ₹{{ "%.0f"|format(budget - spent) }} remaining.
+</div>
+{% endif %}
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">💰 ExpenseTracker</div>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}" {% if request.endpoint=='dashboard' %}class="active"{% endif %}>Dashboard</a>
+    <a href="{{ url_for('add') }}"       {% if request.endpoint=='add'       %}class="active"{% endif %}>+ Add</a>
+    <a href="{{ url_for('history') }}"   {% if request.endpoint=='history'   %}class="active"{% endif %}>History</a>
+    <a href="{{ url_for('set_budget') }}"{% if request.endpoint=='set_budget'%}class="active"{% endif %}>Budget</a>
+    <a href="{{ url_for('predict') }}"   {% if request.endpoint=='predict'   %}class="active"{% endif %}>Predict</a>
+    <a href="{{ url_for('logout') }}" class="logout">Logout ({{ session.username }})</a>
+  </div>
+</nav>
+{% endif %}
+
+<!-- FLASH MESSAGES -->
+<div class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in messages %}
+    <div class="flash {{ cat }}">{{ msg }}</div>
+  {% endfor %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

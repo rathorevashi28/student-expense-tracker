@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Predict — Expense Tracker{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>🔮 Next Month Prediction</h2>
+  <p>Based on your past spending using Linear Regression</p>
+</div>
+
+{% if prediction %}
+
+{% if warn %}
+<div class="warn-box">
+  ⚠️ <strong>Budget Warning!</strong>
+  Your predicted spending of <strong>₹{{ "%.0f"|format(prediction) }}</strong>
+  exceeds your budget of <strong>₹{{ "%.0f"|format(budget) }}</strong>.
+  Consider reducing expenses this month.
+</div>
+{% else %}
+<div class="ok-box">
+  ✅ You are on track! Predicted spending is within your budget.
+</div>
+{% endif %}
+
+<div class="cards">
+  <div class="card blue-card">
+    <div class="card-icon">🔮</div>
+    <div class="card-label">Predicted Next Month</div>
+    <div class="card-value">₹{{ "%.0f"|format(prediction) }}</div>
+  </div>
+  <div class="card purple-card">
+    <div class="card-icon">🎯</div>
+    <div class="card-label">Your Budget</div>
+    <div class="card-value">₹{{ "%.0f"|format(budget) }}</div>
+  </div>
+  <div class="card {{ 'red-card' if warn else 'green-card' }}">
+    <div class="card-icon">{{ '⚠️' if warn else '✅' }}</div>
+    <div class="card-label">Difference</div>
+    <div class="card-value">
+      ₹{{ "%.0f"|format((prediction - budget)|abs) }}
+      {{ 'over' if warn else 'under' }}
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>How the prediction works</h3>
+  <div class="info-box">
+    <strong>Linear Regression</strong> looks at your past monthly spending
+    and finds a trend. If your spending has been increasing, it predicts
+    a higher amount. If decreasing, it predicts lower.<br/><br/>
+    <strong>Past monthly totals used:</strong><br/>
+    {% for i, val in enumerate(history) %}
+      Month {{ i+1 }}: ₹{{ "%.0f"|format(val) }}
+      {% if not loop.last %} → {% endif %}
+    {% endfor %}
+    → <strong>Predicted: ₹{{ "%.0f"|format(prediction) }}</strong>
+  </div>
+</div>
+
+{% else %}
+<div class="empty">
+  Not enough data to predict yet. Add expenses for at least
+  <strong>2 months</strong> to see a prediction.
+  <br/><br/>
+  <a href="{{ url_for('add') }}" class="btn btn-primary">Add Expenses</a>
+</div>
+{% endif %}
+
+{% endblock %}

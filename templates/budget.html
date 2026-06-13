@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Set Budget{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>🎯 Set Budget</h2>
+  <p>Set your monthly spending limit</p>
+</div>
+
+<div class="form-card">
+  <form method="POST">
+
+    <div class="form-group">
+      <label>Budget Amount (₹)</label>
+      <input type="number" name="amount" value="{{ budget }}"
+             min="100" step="100" required/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Month</label>
+        <select name="month">
+          {% for num, name in months %}
+            <option value="{{ num }}"
+              {{ 'selected' if num==current_month }}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <select name="year">
+          {% for y in years %}
+            <option value="{{ y }}"
+              {{ 'selected' if y==current_year }}>{{ y }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" name="set_default" checked/>
+        Also set as my default budget for all months
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Budget</button>
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+<div class="info-box">
+  <strong>How budget works:</strong><br/>
+  • You can set a different budget for each month<br/>
+  • If no budget is set for a month, your default budget is used<br/>
+  • The budget bar on every page shows how much you have used<br/>
+  • Alert turns yellow at 60%, red at 80%
+</div>
+
+{% endblock %}
