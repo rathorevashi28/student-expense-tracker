@@ -2,7 +2,7 @@
 
 A full-stack web application built with Python and Flask where students can track their daily expenses, set monthly budgets, and predict next month's spending using Machine Learning.
 
-**Live Demo:** [Coming after deployment on Railway]
+**Live Demo:**  https://web-production-eb9f7.up.railway.app
 
 ---
 
